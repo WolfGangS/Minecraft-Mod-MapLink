@@ -208,14 +208,15 @@ public class SquareMapConnection extends MapConnection {
 
         for (SquareMapMarkerUpdate markerLayer : markersLayers){
             for (SquareMapMarkerUpdate.Marker marker : markerLayer.markers){
-                if (Objects.equals(marker.type, "icon") && serverEntry.includeMarkerLayer(markerLayer.id) && serverEntry.includeMarker(marker.tooltip)) {
-                    Position position = new Position(marker.tooltip, marker.point.x, config.general.defaultY, marker.point.z, currentDimension + markerLayer.id + marker.tooltip + marker.point.x + marker.point.z, new MarkerLayer(markerLayer.id, markerLayer.name));
+                String tooltip = marker.tooltip == null ? "" : marker.tooltip;
+                if (Objects.equals(marker.type, "icon") && serverEntry.includeMarkerLayer(markerLayer.id) && serverEntry.includeMarker(tooltip)) {
+                    Position position = new Position(tooltip, marker.point.x, config.general.defaultY, marker.point.z, currentDimension + markerLayer.id + tooltip + marker.point.x + marker.point.z, new MarkerLayer(markerLayer.id, markerLayer.name));
                     positions.add(position);
                     ClientMapHandler.registerPosition(position, markerIconLinkTemplate.replace("{icon}", marker.icon));
                 }
-                else if (Objects.equals(marker.type, "polygon") && serverEntry.includeAreaMarkerLayer(markerLayer.id) && serverEntry.includeAreaMarker(marker.tooltip)) {
-                    areaMarkers.add(new AreaMarker(marker.tooltip, 0, 0, 0, Arrays.stream(marker.points).flatMap(Arrays::stream).toArray(Int3[][]::new),
-                            new Color(marker.color, 1f), new Color(marker.fillColor, marker.opacity), currentDimension + markerLayer.id + marker.tooltip + Arrays.deepHashCode(marker.points), new MarkerLayer(markerLayer.id, markerLayer.name)));
+                else if (Objects.equals(marker.type, "polygon") && serverEntry.includeAreaMarkerLayer(markerLayer.id) && serverEntry.includeAreaMarker(tooltip)) {
+                    areaMarkers.add(new AreaMarker(tooltip, 0, 0, 0, Arrays.stream(marker.points).flatMap(Arrays::stream).toArray(Int3[][]::new),
+                            new Color(marker.color, 1f), new Color(marker.fillColor, marker.opacity), currentDimension + markerLayer.id + tooltip + Arrays.deepHashCode(marker.points), new MarkerLayer(markerLayer.id, markerLayer.name)));
                 }
             }
         }
